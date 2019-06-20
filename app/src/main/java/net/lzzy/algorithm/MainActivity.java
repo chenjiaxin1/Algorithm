@@ -1,12 +1,17 @@
 package net.lzzy.algorithm;
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import net.lzzy.algorithm.aigorlib.DirectSort;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 import javax.xml.transform.Templates;
@@ -38,8 +43,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 displayItems(edtItems);
                 break;
             case R.id.activity_main_btn_sort:
-//                directSort();
-                intsertSort();
+                DirectSort<Integer> sort=new DirectSort<>(items);
+                sort.sortTime();
+                String result=sort.getResult();
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("排序成功");
+                builder.setMessage("对比次数:"+sort.getCompareCount()+"\n"+"移动次数:"+sort.getCompareCount()+"\n"
+                        +"交换次数:"+sort.getCompareCount()+"\n"
+                );
+
+
+
                 displayItems(tvResult);
                 break;
             default:
