@@ -32,9 +32,7 @@ public abstract class BaseSort<T extends Comparable<? super T>> {
     }
     public  void sortTime(){
         Long startTime=System.currentTimeMillis();
-        Sort();
         long endTime=System.currentTimeMillis();
-        time =(int) (endTime-startTime);
         directSort=System.currentTimeMillis();
     }
     public abstract void Sort();

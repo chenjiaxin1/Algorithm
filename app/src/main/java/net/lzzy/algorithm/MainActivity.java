@@ -4,14 +4,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.lzzy.algorithm.aigorlib.BaseSort;
 import net.lzzy.algorithm.aigorlib.DirectSort;
+import net.lzzy.algorithm.aigorlib.SortFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.xml.transform.Templates;
@@ -23,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Integer[] items;
     private EditText edtItems;
     private TextView tvResult;
+    Spinner spinner;
 
 
     @Override
@@ -33,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.activity_main_btn_generate).setOnClickListener(this);
         findViewById(R.id.activity_main_btn_sort).setOnClickListener(this);
         tvResult = findViewById(R.id.activity_main_tv_result);
+       final ArrayAdapter<String>adapter=new ArrayAdapter<>
+               (this,android.R.layout.simple_dropdown_item_1line,SortFactory.getSoryNames());
+               adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+               spinner=findViewById(R.id.activit_main_sp);
+               spinner.setAdapter(adapter);
     }
 
     @Override
@@ -43,22 +54,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 displayItems(edtItems);
                 break;
             case R.id.activity_main_btn_sort:
-                DirectSort<Integer> sort=new DirectSort<>(items);
-                sort.sortTime();
-                String result=sort.getResult();
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("排序成功");
-                builder.setMessage("对比次数:"+sort.getCompareCount()+"\n"+"移动次数:"+sort.getCompareCount()+"\n"
-                        +"交换次数:"+sort.getCompareCount()+"\n"
-                );
+                BaseSort<Integer>sort=SortFactory.getInstance(spinner.getSelectedItemPosition(),items);
+//                DirectSort<Integer> sort=new DirectSort<>(items);
+                BaseSort<Integer>sortNotNull=Objects.requireNonNull(sort);
+                sortNotNull.sortTime();
+                String result=sortNotNull.getResult();
+                tvResult.setText(result);
+                Toast.makeText(this, "总时长:"+sort.getDuration(),Toast.LENGTH_SHORT).show();
+//                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+//                builder.setTitle("排序成功");
+//                builder.setMessage("对比次数:"+sort.getCompareCount()+"\n"+"移动次数:"+sort.getCompareCount()+"\n"
+//                        +"交换次数:"+sort.getCompareCount()+"\n"
+//                );
 
 
-
-                displayItems(tvResult);
+//                displayItems(tvResult);
                 break;
             default:
                 break;
         }
+
+    }
+    private void initSpinner(){
+        Spinner spinner=findViewById(R.id.activit_main_sp);
+
+        spinner.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, SortFactory.getSoryNames()));
     }
 
     private void displayItems(TextView tv) {
