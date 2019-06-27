@@ -1,5 +1,7 @@
 package net.lzzy.algorithm.aigorlib;
 
+import android.util.Pair;
+
 /**
  * Created by lzzy_gxy on 2019/6/22.
  * Description:
@@ -17,6 +19,9 @@ public abstract class BaseSearch<T extends Comparable<? super T>>  {
         compareCount = 0;
         swapCount = 0;
         moveStep = 0;
+
+    }
+    public BaseSearch(){
 
     }
     boolean equal(T a,T b){

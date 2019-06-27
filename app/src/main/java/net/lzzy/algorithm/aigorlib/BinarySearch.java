@@ -6,6 +6,7 @@ import java.security.cert.CertPath;
  * Created by lzzy_gxy on 2019/6/22.
  * Description:
  */
+//二分查找
 public class BinarySearch<T extends Comparable<? super T>> extends BaseSearch <T> {
     BinarySearch(T[] items) {
         super(items);
@@ -27,8 +28,9 @@ public class BinarySearch<T extends Comparable<? super T>> extends BaseSearch <T
                 }else {
                     right=mid-1;
                 }
+            setDuration(System.currentTimeMillis()-start);
+            return -1;
             }
-        setDuration(System.currentTimeMillis()-start);
         return 0;
     }
 }
