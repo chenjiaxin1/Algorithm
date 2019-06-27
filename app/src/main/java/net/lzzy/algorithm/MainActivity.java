@@ -1,21 +1,28 @@
 package net.lzzy.algorithm;
 
+import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.lzzy.algorithm.aigorlib.BaseSearch;
 import net.lzzy.algorithm.aigorlib.BaseSort;
 import net.lzzy.algorithm.aigorlib.DirectSort;
+import net.lzzy.algorithm.aigorlib.FFF;
 import net.lzzy.algorithm.aigorlib.SortFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
 
@@ -28,7 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Integer[] items;
     private EditText edtItems;
     private TextView tvResult;
-    Spinner spinner;
+    private Spinner spinner,spinner2;
+    LinearLayout container;
+    private Button btnSort;
+
 
 
     @Override
@@ -40,10 +50,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.activity_main_btn_sort).setOnClickListener(this);
         tvResult = findViewById(R.id.activity_main_tv_result);
        final ArrayAdapter<String>adapter=new ArrayAdapter<>
-               (this,android.R.layout.simple_dropdown_item_1line,SortFactory.getSoryNames());
-               adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-               spinner=findViewById(R.id.activit_main_sp);
-               spinner.setAdapter(adapter);
+                (this,android.R.layout.simple_dropdown_item_1line,SortFactory.getSoryNames());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner=findViewById(R.id.activit_main_sp);
+        spinner.setAdapter(adapter);
+        final ArrayAdapter<String>adapter1=new ArrayAdapter<>
+                (this,android.R.layout.simple_dropdown_item_1line,SortFactory.getSoryNames());
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2=findViewById(R.id.sp1);
+        spinner2.setAdapter(adapter1);
+
     }
 
     @Override
@@ -80,6 +96,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         spinner.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, SortFactory.getSoryNames()));
+    }
+    private View.OnClickListener listener=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            BaseSearch<Integer>search= FFF.getInstance(spinner2.getSelectedItemPosition(),items);
+            if (search!=null){
+                int pos=search.search(v.getId());
+                tvResult.setText("该元素位于数组的第".concat((pos+1)+"位"));
+            }
+
+        }
+    };
+
+    private  void resetSearch(){
+        container.removeAllViews();
+        generateItems();
+        btnSort.callOnClick();
+        for (Integer i: items){
+            Button btn=new Button(this);
+            btn.setText(String.format(i.toString(), Locale.CHINA));
+            btn.setId(i);
+            btn.setLayoutParams(new LinearLayout.LayoutParams(0,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            btn.setOnClickListener(listener);
+            container.addView(btn);
+        }
     }
 
     private void displayItems(TextView tv) {

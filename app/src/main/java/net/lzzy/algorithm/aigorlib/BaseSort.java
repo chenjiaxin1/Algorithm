@@ -31,8 +31,7 @@ public abstract class BaseSort<T extends Comparable<? super T>> {
         return a.compareTo(b) > 0;
     }
     public  void sortTime(){
-        Long startTime=System.currentTimeMillis();
-        long endTime=System.currentTimeMillis();
+        Long start=System.currentTimeMillis();
         directSort=System.currentTimeMillis();
     }
     public abstract void Sort();
